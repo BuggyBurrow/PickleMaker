@@ -1,7 +1,13 @@
 fn main() {
-    let mut cash = 100;
+    let mut cash: u32 = 100;
 
     let mut shop_inventory = get_pickle_shop_inventory();
+
+    println!("{:?}", shop_inventory.inventory[1]);
+    let cucumber_index = shop_inventory.retrieve_item_index("Cucumber".into());
+    shop_inventory.buy_item(cucumber_index, &mut cash);
+    println!("{:?}", shop_inventory.inventory[1]);
+    println!("{cash}");
 
 }
 
@@ -36,7 +42,29 @@ struct ShopInventory {
 }
 
 impl ShopInventory {
-    //fn buy_item()
+    fn retrieve_item_index(&self, item_name: String) -> i32 {
+        
+        for (index , item) in self.inventory.iter().enumerate() {
+            if item.name == item_name {
+                return index as i32
+            }
+        }
+        -1
+    } 
+
+    fn buy_item(&mut self, item_index: i32, cash: &mut u32) -> bool {
+        if item_index >= 0 {
+            if self.inventory[item_index as usize].count >= 1 
+            && *cash >= self.inventory[item_index as usize].price {
+                self.inventory[item_index as usize].count -= 1;
+                *cash -= self.inventory[item_index as usize].price;
+                return true
+            }
+        }
+        false
+    }
+
+
     //fn display_item()
 }
 
