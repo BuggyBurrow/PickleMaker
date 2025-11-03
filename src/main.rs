@@ -1,24 +1,18 @@
 fn main() {
-    let mut cash: u32 = 100;
 
-    let mut shop_inventory = get_pickle_shop_inventory();
+    let mut user = User::new();
+    let mut pickle_shop = get_pickle_shop_inventory();
 
-    println!("{:?}", shop_inventory.inventory[1]);
-    let cucumber_index = shop_inventory.retrieve_item_index("Cucumber".into());
-    shop_inventory.buy_item(cucumber_index, &mut cash);
-    println!("{:?}", shop_inventory.inventory[1]);
-    println!("{cash}");
-
+    pickle_shop.display();
 }
 
-fn get_pickle_shop_inventory() -> ShopInventory {
-    ShopInventory {
+fn get_pickle_shop_inventory() -> Inventory {
+    Inventory {
         inventory: vec![
-        Item{name: "Pickling Brine".into(), visual: '🫙', price: 3, count: 20},
         Item{name: "Cucumber".into(), visual: '🥒', price: 2, count: 5},
         Item{name: "Tomato".into(), visual: '🍅', price: 7, count: 3},
         Item{name: "Ginger".into(), visual: '🫚', price: 3, count: 3},
-        Item{name: "Napa Cabbage".into(), visual: '🥬', price: 4, count: 3},
+        Item{name: "Cabbage".into(), visual: '🥬', price: 4, count: 3},
         Item{name: "Watermelon".into(), visual: '🍉', price: 6, count: 3},
         Item{name: "Green Pepper".into(), visual: '🫑', price: 5, count: 3},
         Item{name: "Onion".into(), visual: '🧅', price: 3, count: 3},
@@ -28,6 +22,7 @@ fn get_pickle_shop_inventory() -> ShopInventory {
     }
 }
 
+
 #[derive(Debug)]
 struct Item {
     name: String,
@@ -36,44 +31,75 @@ struct Item {
     count: u32,
 }
 
+
+impl Item {
+    fn increase_count(&mut self) {
+        self.count += 1;
+    }
+    
+    fn decrease_count(&mut self) {
+        if self.count > 0 {
+            self.count -= 1;
+        }
+    }
+    
+    fn has_stock(&self) -> bool {
+        self.count >= 1
+    }
+
+    fn display(&self) {
+        println!("{} {} {} Pickle(s)", self.visual, self.count, self.name);
+    }
+
+    fn display_price(&self) {
+        println!("{} {} Pickles cost ${} each", self.visual, self.name, self.price);
+    }
+}
+
 #[derive(Debug)]
-struct ShopInventory {
+struct Inventory {
     inventory: Vec<Item>
 }
 
-impl ShopInventory {
-    fn retrieve_item_index(&self, item_name: String) -> i32 {
+impl Inventory {
+    fn new() -> Inventory {
+        Inventory {
+            inventory: Vec::new()
+        }
+    }
+
+    fn retrieve_item_index(&self, item_name: String) -> isize {
         
         for (index , item) in self.inventory.iter().enumerate() {
             if item.name == item_name {
-                return index as i32
+                return index as isize
             }
         }
         -1
-    } 
-
-    fn buy_item(&mut self, item_index: i32, cash: &mut u32) -> bool {
-        if item_index >= 0 {
-            if self.inventory[item_index as usize].count >= 1 
-            && *cash >= self.inventory[item_index as usize].price {
-                self.inventory[item_index as usize].count -= 1;
-                *cash -= self.inventory[item_index as usize].price;
-                return true
-            }
-        }
-        false
     }
 
-
-    //fn display_item()
+    fn display(&self) {
+        for item in &self.inventory {
+            item.display();
+        }
+    }
 }
 
-struct UserInventory {
-    inventory: Vec<Item>
+struct User {
+    cash: u32,
+    inventory: Inventory,
 }
 
-impl UserInventory {
-    //fn add_item()
-    //fn try_recipe(item1, item2) -> recipe_item
-    // 
+impl User {
+    fn new() -> Self {
+        User {
+            cash: 100,
+            inventory: Inventory::new(),
+        }
+    }
+
+    fn pay() {
+
+    }
+
 }
