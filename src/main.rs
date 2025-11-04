@@ -83,6 +83,10 @@ impl Inventory {
             item.display();
         }
     }
+
+    fn display_prices(&self) {
+        for item in 
+    }
 }
 
 struct User {
@@ -98,8 +102,8 @@ impl User {
         }
     }
 
-    fn pay() {
-
+    fn pay(&mut self, price: u32) {
+        self.cash -= price;
     }
 
 }
